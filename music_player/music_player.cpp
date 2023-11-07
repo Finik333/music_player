@@ -3,41 +3,17 @@
 
 using namespace sf;
 
-void menu(RenderWindow& window) {
-    Texture menuBackground;
-    if (!menuBackground.loadFromFile("bg.png"))
-    {
-        return;
-    }
-    Sprite menuBg(menuBackground);
-    bool isMenu = true;
-    menuBg.setPosition(345, 0);
-    while (isMenu)
-    {
-        Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == Event::Closed) {
-                window.close();
-                isMenu = false;
-            }
-        }
-        window.clear(Color(129, 181, 221));
-        window.draw(menuBg);
-        window.display();
-    }
-}
-
 int main() {
-    RenderWindow window(VideoMode(1376, 768), L"Мой плеер");
+    RenderWindow window(VideoMode(1376, 768), L"Мой плеер", Style::Default);
     SoundBuffer buffer1, buffer2;
     if (!buffer1.loadFromFile("sound1.wav") || !buffer2.loadFromFile("sound2.wav")) {
-        return 1;
+        return -1;
     }
+    Texture menuBackground;
+    menuBackground.loadFromFile("bg.png");
+    Sprite menuBg(menuBackground);
+    menuBg.setPosition(345, 0);
     Sound sound;
-    sound.setBuffer(buffer1);
-
-    bool playSound = false;
 
     while (window.isOpen())
     {
@@ -52,21 +28,20 @@ int main() {
                     sound.stop();
                     sound.setBuffer(buffer1);
                     sound.play();
+
                 }
                 else if (event.key.code == Keyboard::B) {
                     sound.stop();
                     sound.setBuffer(buffer2);
                     sound.play();
+
                 }
             }
-        }
-        if (!playSound) {
-            sound.play();
-            playSound = false;
+
         }
 
-        window.clear(Color::Blue);
+        window.clear(Color(129, 181, 221));
+        window.draw(menuBg);
         window.display();
-        menu(window);
     }
 }
